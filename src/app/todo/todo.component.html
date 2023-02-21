@@ -1,0 +1,85 @@
+<div class="container">
+    <div class="row">
+        <div class="col-5 mx-auto">
+            <h3 class="bg-primary text-white p-3">
+                {{ getName() }} 'in listesi               
+            </h3>
+            <!-- INPUT FIELD 
+                ngModel two-way binding oldugu için addItem a artık parametre göndermeye gerek kalmıyor
+            -->
+            <div class="input-group mb-3">
+                <input
+                [(ngModel)]="inputText" 
+                type="text" class="form-control"
+                (keyup.enter)="addItem();">                                  
+                <!-- getBtnClasses içindeki bilgi ts method haricinde direk olarak class içinede tanımlanabiliyor -->
+                <button 
+                [class]="getBtnClasses()"
+                class="btn" 
+                (click)="addItem();">Add</button>
+            </div>
+            
+            <!-- CHECKBOX -->
+            <div class="form-check mb-3">
+                <input type="checkbox" [(ngModel)]="displayAll" class="form-check-input" name="" id="displayAll">
+                <label for="displayAll" class="form-check-label">Hepsini Göster</label>
+            </div>
+
+            <!-- TABLE -->
+            <ng-template #itemsTable>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>                
+                    <tbody>
+                        <tr *ngFor="let item of getItems(); let i = index;"
+                            [class]="{'bg-primary': item.action, 'bg-warning': !item.action}">
+                            <!-- [class.bg-primary]="item.action"
+                            [class.bg-warning]="!item.action"> -->
+                            <td>{{i +1}}</td>
+                            <td>{{item.description}}</td>
+                            <td> 
+                                <!-- IF BLOGU -->
+                                <!-- <div *ngIf="item.action">Yes</div>
+                                <div *ngIf="!item.action">No</div> -->
+
+                                <!-- SWITCH BLOGU -->
+                                <!-- <div [ngSwitch]="item.action">
+                                    <div *ngSwitchCase="true">Yes</div>
+                                    <div *ngSwitchDefault>No</div>
+                                </div> -->
+
+                                <!-- IF-ELSE BLOGU -->
+                                <div *ngIf="item.action; else noTemplate">Yes</div>
+                                <ng-template #noTemplate>No</ng-template>
+
+                                <!-- IF-THEN BLOGU -->
+                                <!-- <div *ngIf="item.action; then noTemplate">Burası Gösterilmez</div>
+                                <ng-template #noTemplate>No</ng-template> -->
+
+                                <!-- IF-THEN-ELSE BLOGU -->
+                                <!-- <div *ngIf="item.action; then yesTemplate else noTemplate">Burası Gösterilmez</div>
+                                <ng-template #noTemplate>No</ng-template>
+                                <ng-template #yesTemplate>Yes</ng-template> -->
+
+                            </td>
+                            <td>
+                                <input type="checkbox" (change)="onActionChanged(item)" [(ngModel)]="item.action" name="" id="">
+                            </td>
+                        </tr>                    
+                    </tbody>
+                </table>
+            </ng-template>
+            
+            <div class="my-2">{{ displayCount() }} görev tamamlandı</div>
+
+            <!-- NGIF tabloda item yoksa uyarı veriyor, varsa ng-template ile çevrelenmiş tabloyu çağırıyor -->
+            <div class="alert alert-warning" *ngIf="getItems().length == 0; else itemsTable"> Tüm görevler tamamlandı</div>
+
+        </div>
+    </div>
+</div>
